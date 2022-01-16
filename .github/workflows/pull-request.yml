@@ -31,12 +31,12 @@ jobs:
         run: make install-requirements
       - name: Check project version
         run: |
-          project-version check
-            --provider=GitHub
-            --organization=dmytrostriletskyi
-            --repository=project-version
-            --base-branch=master
-            --head-branch=${{ github.head_ref }}
+          project-version check \
+            --provider=GitHub \
+            --organization=dmytrostriletskyi \
+            --repository=project-version \
+            --base-branch=master \
+            --head-branch=${{ github.head_ref }} \
             --access-token=${{ secrets.GIT_HUB_ACCESS_TOKEN }}
   lint:
     name: Lint for python-${{ matrix.python-version }} on ${{ matrix.os }}
@@ -58,11 +58,7 @@ jobs:
       - name: Get a version of the project
         id: get_project_version
         run: echo "::set-output name=project_version::$(make get-project-version)"
-      - name: Install operating system requirements
-        run: apt-get update && apt-get install -y build-essential libgomp1
       - name: Install project requirements
-        run: make install-requirements
-      - name: Install requirements
         run: make install-requirements
       - name: Check if requirements are safe
         run: make check-requirements-safety
