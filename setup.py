@@ -9,7 +9,7 @@ from setuptools import (
     setup,
 )
 
-DESCRIPTION = 'Explicitly and strictly control project version with semantic versioning.'
+DESCRIPTION = 'Explicit, strict and automatic project version management based on semantic versioning.'
 URL = 'https://github.com/dmytrostriletskyi/project-version'
 
 def read_requirements(name: str) -> List[str]:
@@ -29,7 +29,6 @@ def read_requirements(name: str) -> List[str]:
 
 with open('README.md', 'r') as read_me:
     long_description = read_me.read()
-
 
 with open('.project-version', 'r') as project_version_file:
     project_version = project_version_file.read().strip()
