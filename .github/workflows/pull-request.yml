@@ -1,0 +1,74 @@
+---
+name: Pull request workflow
+
+on:
+  pull_request_target:
+    branches:
+      - master
+
+jobs:
+  check-project-version:
+    name: Check project version for python-${{ matrix.python-version }} on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        python-version: ['3.10']
+    outputs:
+      project_version: ${{ steps.get_project_version.outputs.project_version }}
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v1
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Get a version of the project
+        id: get_project_version
+        run: echo "::set-output name=project_version::$(make get-project-version)"
+      - name: Install project requirements
+        run: make install-requirements
+      - name: Check project version
+        run: |
+          project-version check
+            --provider=GitHub
+            --organization=dmytrostriletskyi
+            --repository=project-version
+            --base-branch=master
+            --head-branch=${{ github.head_ref }}
+            --access-token=${{ secrets.GIT_HUB_ACCESS_TOKEN }}
+  lint:
+    name: Lint for python-${{ matrix.python-version }} on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        python-version: ['3.6', '3.7', '3.8', '3.9', '3.10']
+    outputs:
+      project_version: ${{ steps.get_project_version.outputs.project_version }}
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v1
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Get a version of the project
+        id: get_project_version
+        run: echo "::set-output name=project_version::$(make get-project-version)"
+      - name: Install operating system requirements
+        run: apt-get update && apt-get install -y build-essential libgomp1
+      - name: Install project requirements
+        run: make install-requirements
+      - name: Install requirements
+        run: make install-requirements
+      - name: Check if requirements are safe
+        run: make check-requirements-safety
+      - name: Check code complexity
+        run: make check-code-complexity
+      - name: Check code standards
+        run: make check-code-quality
+      - name: Check YAML standards
+        run: make check-yaml-standards
