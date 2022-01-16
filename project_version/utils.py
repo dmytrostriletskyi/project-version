@@ -2,6 +2,7 @@
 Provide utils for command line interface.
 """
 
+
 def parse_project_version(version):
     """
     Parse project version to a tuple of integer.

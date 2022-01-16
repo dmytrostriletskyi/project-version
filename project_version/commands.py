@@ -7,19 +7,19 @@ import click
 
 from project_version.constants import (
     FAILED_EXIT_CODE,
-    SUCCESSFUL_EXIT_CODE,
     GIT_HUB_PROVIDER,
+    SUCCESSFUL_EXIT_CODE,
     SUPPORTED_PROVIDERS,
 )
-from project_version.services import GitHubCheckProjectVersion
 from project_version.help import (
     ACCESS_TOKEN,
+    BASE_BRANCH,
+    HEAD_BRANCH,
     ORGANIZATION_NAME_HELP,
     PROVIDER_NAME_HELP,
     REPOSITORY_NAME_HELP,
-    BASE_BRANCH,
-    HEAD_BRANCH,
 )
+from project_version.services import GitHubCheckProjectVersion
 
 
 @click.option('--provider', required=True, type=click.Choice(SUPPORTED_PROVIDERS), help=PROVIDER_NAME_HELP)
@@ -30,7 +30,7 @@ from project_version.help import (
 @click.option('--access-token', required=True, type=str, help=ACCESS_TOKEN)
 @click.command('check')
 def check(provider, organization, repository, base_branch, head_branch, access_token) -> None:
-    """
+    r"""
     Check whether specified project version is increased properly.
     \f (https://click.palletsprojects.com/en/8.0.x/documentation/#truncating-help-texts)
 
@@ -41,9 +41,6 @@ def check(provider, organization, repository, base_branch, head_branch, access_t
         base_branch (str): a branch to compare a project version with. Usually, a default branch.
         head_branch (str): a branch to get its project version for comparison. Usually, a feature branch.
         access_token (str): a provider's API access token.
-
-    Returns:
-        None.
     """
     if provider == GIT_HUB_PROVIDER:
         is_succeed, reason = GitHubCheckProjectVersion(

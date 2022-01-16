@@ -14,6 +14,9 @@ class GitHubCheckProjectVersion(AbstractCheckProjectVersion):
     def get_project_versions(self):
         """
         Get project versions for base and head branches.
+
+        Returns:
+            Base and head branches project versions as a tuple of strings.
         """
         github = Github(login_or_token=self.access_token)
         repository = github.get_repo(full_name_or_id=f'{self.organization}/{self.repository}')

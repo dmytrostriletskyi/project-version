@@ -34,10 +34,6 @@ class AbstractCheckProjectVersion(ABC):
             base_branch (str): a branch to compare a project version with. Usually, a default branch.
             head_branch (str): a branch to get its project version for comparison. Usually, a feature branch.
             access_token (str): a provider's API access token.
-
-        Returns:
-            True and None, if check project version can be increased.
-            Otherwise, False and reason as a string.
         """
         self.organization = organization
         self.repository = repository
@@ -48,6 +44,10 @@ class AbstractCheckProjectVersion(ABC):
     def call(self):
         """
         Check a project version.
+
+        Returns:
+            True and None, if check project version can be increased.
+            Otherwise, False and reason as a string.
         """
         base_branch_project_version, head_branch_project_version = self.get_project_versions()
 
@@ -57,14 +57,14 @@ class AbstractCheckProjectVersion(ABC):
         (
             base_branch_major_version,
             base_branch_minor_version,
-            base_branch_patch_version
+            base_branch_patch_version,
         ) = parse_project_version(base_branch_project_version)
 
         (
             head_branch_major_version,
             head_branch_minor_version,
-            head_branch_patch_version
-        ) =  parse_project_version(head_branch_project_version)
+            head_branch_patch_version,
+        ) = parse_project_version(head_branch_project_version)
 
         major_difference = int(head_branch_major_version) - int(base_branch_major_version)
         minor_difference = int(head_branch_minor_version) - int(base_branch_minor_version)
@@ -100,5 +100,8 @@ class AbstractCheckProjectVersion(ABC):
     def get_project_versions(self):
         """
         Get project versions for base and head branches.
+
+        Returns:
+            Base and head branches project versions as a tuple of strings.
         """
         pass

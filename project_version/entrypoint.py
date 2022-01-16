@@ -1,11 +1,10 @@
 """
 Provide implementation of command-line interface's entrypoint.
 """
-from project_version.commands import (
-    check,
-)
-
 import click
+
+from project_version.commands import check
+
 
 @click.group()
 @click.version_option()
