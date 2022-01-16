@@ -1,4 +1,4 @@
-SOURCE_FOLDER=./cooking_time_model
+SOURCE_FOLDER=./project_version
 TESTS_FOLDER=./tests
 
 install-requirements:
