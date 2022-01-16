@@ -1,0 +1,3 @@
+include *.md
+include .project-version
+recursive-include requirements *.txt
