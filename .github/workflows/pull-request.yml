@@ -31,12 +31,12 @@ jobs:
         run: make install-requirements
       - name: Check project version
         run: |
-          project-version check
-            --provider=GitHub
-            --organization=dmytrostriletskyi
-            --repository=project-version
-            --base-branch=master
-            --head-branch=${{ github.head_ref }}
+          project-version check \
+            --provider=GitHub \
+            --organization=dmytrostriletskyi \
+            --repository=project-version \
+            --base-branch=master \
+            --head-branch=${{ github.head_ref }} \
             --access-token=${{ secrets.GIT_HUB_ACCESS_TOKEN }}
   lint:
     name: Lint for python-${{ matrix.python-version }} on ${{ matrix.os }}
