@@ -17,8 +17,6 @@ jobs:
         uses: actions/setup-python@v1
         with:
           python-version: 3.10
-      - name: Install operating system requirements
-        run: apt-get update && apt-get install -y build-essential libgomp1
       - name: Get a project version
         id: get_project_version
         run: echo "::set-output name=project_version::$(make get-project-version)"
