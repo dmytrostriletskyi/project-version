@@ -58,8 +58,6 @@ jobs:
       - name: Get a version of the project
         id: get_project_version
         run: echo "::set-output name=project_version::$(make get-project-version)"
-      - name: Install operating system requirements
-        run: apt-get update && apt-get install -y build-essential libgomp1
       - name: Install project requirements
         run: make install-requirements
       - name: Install requirements
