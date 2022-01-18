@@ -29,11 +29,11 @@ class AbstractCheckProjectVersion(ABC):
         Construct the object.
 
         Arguments:
-            organization (str): a provider's organization name.
-            repository (str): a provider's repository name.
+            organization (str): the provider's organization name.
+            repository (str): the provider's repository name.
             base_branch (str): a branch to compare a project version with. Usually, a default branch.
             head_branch (str): a branch to get its project version for comparison. Usually, a feature branch.
-            access_token (str): a provider's API access token.
+            access_token (str): the provider's API access token.
         """
         self.organization = organization
         self.repository = repository
