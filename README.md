@@ -13,21 +13,29 @@ Explicit, strict and automatic project version management based on semantic vers
   * [Semantic versioning](#semantic-versioning)
   * [Project version](#project-version)
   * [Motivation](#motivation)
-* [Installation](#installation)
-* [Usage](#usage)
+* [Command line interface](#command-line-interface)
+  * [Installation](#installation)
   * [Version](#version)
   * [Help](#help)
   * [Check](#check)
   * [Bump](#bump)
   * [Release](#release)
-* [Examples](#examples)
+  * [Examples](#examples)
+* [FAQ](#faq)
 * [Contributing](#contributing)
 
 ## Getting started
 
+If you found this project useful, but it does not really fit your development and releasing processes, 
+[create an issue](https://github.com/dmytrostriletskyi/project-version/issues) with your proposals, please.
+
+Also, if you have any questions after reading the documentation, check [FAQ](#faq). If there are no answers,
+[create an issue](https://github.com/dmytrostriletskyi/project-version/issues) with your question, please.
+
 ### End users
 
-An end user of the project is a developer who develops a project that needs versioning such as API or libraries.
+An end user of the project is a software engineer or DevOps guy who develop projects that needs explicit, strict and 
+automatic project version management for tags, images, API and/or libraries.
 
 ### Semantic versioning
 
@@ -38,14 +46,16 @@ major number, the second digit is minor number, and the third digit is patch num
 
 These are the rules of increasing chose numbers:
 
-1. Increase major version when you make incompatible API changes.
+1. Increase major version when you make incompatible API changes such as change a name of a required function's or API
+   parameter.
    
    ```bash
    Before changes: 1.3.12
    After changes: 2.0.0
    ```
 
-2. Increase minor version when you add functionality in a backwards compatible manner.
+2. Increase minor version when you add functionality in a backwards compatible manner such as add a new optional
+   function's or API parameter.
    
    ```bash
    Before changes: 1.3.12
@@ -59,23 +69,25 @@ These are the rules of increasing chose numbers:
    After changes: 1.3.13
    ```
 
-You have probably seen semantic versioning in your programming language's packages such as [JavaScript's axios](https://www.npmjs.com/package/axios)
-(e.g. version `0.24.0`) or [Python requests](https://pypi.org/project/requests/) (e.g. version `2.27.1`).
+You have probably seen semantic versioning in your programming language's packages such as 
+[JavaScript's axios](https://www.npmjs.com/package/axios) (e.g. version `0.24.0`) or 
+[Python requests](https://pypi.org/project/requests/) (e.g. version `2.27.1`).
 
 ### Project version
 
-`project version` is just a set of principles and automations for developers to maintain their projects. `project version` 
-requires having a file named `.project-version` in the root directory containing a project version. With this file, 
-developers declare single source of project version's truth.
+`project version` is just a set of principles to maintain project versioning and 
+[command line interface](#command-line-interface) that helps not to forget about those principles such as a code style 
+and linters to check its compliance. 
+
+`project version` requires having a file named `.project-version` in the root directory containing a project version. 
+With this file, developers declare single source to fetch a project version from for things like `Git` tags or `Docker` 
+images. 
 
 ![](/assets/project-version-file.png)
 
-If needed, project version must be reused only from the file in. On how to reuse it, check 
-[motivation chapter](#motivation) chapter below.
+### Usage
 
-### Motivation
-
-There are the following principles and practices `project version` brings to you:
+Now you can reuse a project version from `.project-version` file for multiple release-related purposes:
 
 1. There may be situations when you deployed the new version of an application but do not have deployment logs, or you 
    deployed the new version of a application but logs tell nothing, or do not have `Git` information. In all the cases 
@@ -105,8 +117,6 @@ There are the following principles and practices `project version` brings to you
       jobs:
        release:
          runs-on: [ubuntu-latest]
-         outputs:
-           project_version: ${{ steps.get_project_version.outputs.project_version }}
          steps:
            - uses: actions/checkout@v2
            - name: Create Release
@@ -116,21 +126,21 @@ There are the following principles and practices `project version` brings to you
                release_name: Release v$(cat .project-version)
    ```
 
-3. Instead of supporting package version (`Python package`, `Gem` or `JAR`) in a dedicated file, you can automatically 
+4. Instead of supporting package version (`Python package`, `Gem` or `JAR`) in a dedicated file, you can automatically 
    use a project version. `Python package` with its `setup.py` for building packages is illustrated below:
   
    ```python
    with open('.project-version', 'r') as project_version_file:
        project_version = project_version_file.read().strip()
   
-       setup(
-           version=project_version,
-           name='project-version',
-           ...
-       )
+   setup(
+       version=project_version,
+       name='project-version',
+       ...
+   )
    ```
 
-4. In case you manage an infrastructure as a code (e.g. `Kubernetes`), you may face challenges of supporting multiple
+5. In case you manage an infrastructure as a code (e.g. `Kubernetes`), you may face challenges of supporting multiple
    major version of your project (e.g. `HTTP API`). Without automation, you should create new major version 
    configurations manually.
 
@@ -186,22 +196,43 @@ There are the following principles and practices `project version` brings to you
    metadata:
      namespace: api-v2
    ```
+   
+And there is much more cases when relying on a project version from its file makes software releasing easier.
 
-Yes, all this approaches requires for a **project version always be up-to-date and never corrupted**. Luckly, those 
-cases are covered with a set of automation scripts (command line interface) written in Python that helps to manage a 
-project version. Discover them by checking [usage](#usage) chapter below.
+### Maintenance
 
-## Installation
+All use cases described above requires a project version always be up-to-date and never corrupted. In case it is not,
+you can release the same version twice, for example. To avoid this, `project-version` is tightly bound to a branching
+model with its release life-cycle. Let's consider how `project-version` works with the most popular branching models
+`Git flow` and `GitHub flow`.
+
+In `Git flow`, developers do features in feature branches and merge them to `develop` branch. When `develop` branch
+has a set of features merged, a release is created (with a separate branch for it) and deployed. To define a release 
+version, `project-version` requests a developer to make an additional commit into `develop` branch that changes 
+`.project-version` file.
+
+<img src="/assets/git-flow.png" width="600" height="401">
+
+In `GitHub flow`, developers do features in feature branches and merge them to `develop` branch. Once a single feature
+is merged to `develop` branch, a release is immediately created (with no separate branch) and deployed. To define a
+release version, `project-version` requests a developer to make an additional commit into a feature branch that changes 
+`.project-version` file.
+
+<img src="/assets/git-hub-flow.png" width="600" height="316">
+
+## Command line interface
+
+This chapter describes a set of command line interface (automation scripts) with descriptive explanation of its 
+use-cases that help to manage a project version. The command line interface is completely optional but helpful. It
+helps developers not to forget about increasing a project version or auto-increase when needed.
+
+### Installation
 
 Install using `pip3`:
 
 ```bash
 $ pip3 install project-version
 ```
-
-## Usage
-
-This chapter describes a set of automation scripts (command line interface) that help to manage a project version.
 
 ### Version
 
@@ -257,7 +288,11 @@ $ project-version check \
     --access-token=ghp_0TI5LBBLNyKlT5Lv8eR6EIOB0hkopMqz5LWjNyKlZ1
 ```
 
-## Examples
+### Examples
+
+This capture illustrates on how to use the command line interface for `GitHub Actions` workflows. With them, you can 
+easily understand principles and re-write to your pipelines runner such as `Jenkins` or `GitLab CI/CD` in case you do 
+not use `GitHub Actions`.
 
 Example of checking a project version on a pull request workflow:
 
@@ -350,6 +385,36 @@ jobs:
               --branch=master \
               --version=${{ steps.get_project_version.outputs.project_version }}
 ```
+
+## FAQ
+
+1. **Q:** `project-version`is written in `Python`, but my project's stack is different. Why should I support Python` for 
+   this?
+  
+   **A:** When you develop a project, you do not need `Python`, but only `.project-version` file. The only place you need
+   `Python` on is your pipelines runner such as `GitHub Actions`, `Jenkins` or `GitLab CI/CD` to run the command line
+   interface. You can use isolated environment such as `Docker` containers:
+
+   ```yaml
+   jobs:
+     check-project-version:
+       runs-on: [ubuntu-latest]
+       container:
+         image: python:3.9.0-slim
+       ...
+   ```
+
+2. **Q:** Why should a developer increase a project version manually for a feature, or a set of features?
+
+   **A:** When a developer does a change, the only they know a degree of change: either patch, minor or major. There is
+   no machine learning model or other software that can describe a degree of change instead of a person who made those
+   changes.
+   
+3. **Q:** If we merge feature branches often, many concurrent feature branches should pull new project version often. Is
+   it fine?
+
+   **A:** Yes, it is fine. It is a price you pay for the project management. Also, keep in mind that most time you
+    develop a feature, and only little time you pull other feature branches' changes and merge.
 
 ## Contributing
 
