@@ -376,6 +376,31 @@ jobs:
 
 ### Release
 
+Make a release — `project-version release`.
+
+Parameters:
+
+| Argument        | Type   | Required | Restrictions      | Description                                                                                                                                         |
+|:----------------|:------:|:--------:|:-----------------:|-----------------------------------------------------------------------------------------------------------------------------------------------------|
+| provider        | String | Yes      | One of: `GitHub`. | A provider of hosting for software development and version control name.                                                                            |
+| organization    | String | Yes      | -                 | The provider's organization name.                                                                                                                   |
+| repository      | String | Yes      | -                 | The provider's repository name.                                                                                                                     |
+| branch          | String | Yes      | -                 | A branch to make a release for                                                                                                                      |
+| project-version | String | Yes      | -                 | A project version to make a release with.                                                                                                           |
+| access-token    | String | Yes      | -                 | The provider's [API access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token). |
+
+Example of usage:
+
+```bash
+$ project-version release \
+    --provider=GitHub \
+    --organization=dmytrostriletskyi \
+    --repository=project-version \
+    --branch=master \
+    --project-version=1.1.3 \
+    --access-token=ghp_0TI5LBBLNyKlT5Lv8eR6EIOB0hkopMqz5LWjNyKlZ1
+```
+
 Example of workflow:
 
 ```yaml
@@ -406,7 +431,8 @@ jobs:
               --organization=facebook \
               --repository=react \
               --branch=master \
-              --version=${{ steps.get_project_version.outputs.project_version }}
+              --project-version=${{ steps.get_project_version.outputs.project_version }} \
+              --access-token=${{ secrets.GIT_HUB_ACCESS_TOKEN }}
 ```
 
 ## FAQ

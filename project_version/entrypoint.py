@@ -6,6 +6,7 @@ import click
 from project_version.commands import (
     bump,
     check,
+    release,
 )
 
 
@@ -21,6 +22,7 @@ def cli() -> None:
 
 cli.add_command(bump)
 cli.add_command(check)
+cli.add_command(release)
 
 if __name__ == '__main__':
     cli()
