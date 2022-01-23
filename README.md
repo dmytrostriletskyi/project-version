@@ -288,13 +288,7 @@ $ project-version check \
     --access-token=ghp_0TI5LBBLNyKlT5Lv8eR6EIOB0hkopMqz5LWjNyKlZ1
 ```
 
-### Examples
-
-This capture illustrates on how to use the command line interface for `GitHub Actions` workflows. With them, you can 
-easily understand principles and re-write to your pipelines runner such as `Jenkins` or `GitLab CI/CD` in case you do 
-not use `GitHub Actions`.
-
-Example of checking a project version on a pull request workflow:
+Example of workflow:
 
 ```yaml
 ---
@@ -323,7 +317,34 @@ jobs:
               --access-token=${{ secrets.GIT_HUB_ACCESS_TOKEN }}
 ```
 
-Example of bumping a project version on a pull request workflow:
+### Bump
+
+Bump the minor version of a project version — `project-version bump`.
+
+Parameters:
+
+| Argument     | Type   | Required | Restrictions      | Description                                                                                                                                         |
+|:-------------|:------:|:--------:|:-----------------:|-----------------------------------------------------------------------------------------------------------------------------------------------------|
+| provider     | String | Yes      | One of: `GitHub`. | A provider of hosting for software development and version control name.                                                                            |
+| organization | String | Yes      | -                 | The provider's organization name.                                                                                                                   |
+| repository   | String | Yes      | -                 | The provider's repository name.                                                                                                                     |
+| base-branch  | String | Yes      | -                 | A branch to get a project version from. Usually, a default branch.                                                                              |
+| head-branch  | String | Yes      | -                 | A branch to push bumped project version to. Usually, a feature branch.                                                                      |
+| access-token | String | Yes      | -                 | The provider's [API access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token). |
+
+Example of usage:
+
+```bash
+$ project-version bump \
+    --provider=GitHub \
+    --organization=facebook \
+    --repository=react \
+    --base-branch=master \
+    --head-branch=dependabot/npm/core-js-3.6.4 \ 
+    --access-token=ghp_0TI5LBBLNyKlT5Lv8eR6EIOB0hkopMqz5LWjNyKlZ1
+```
+
+Example of workflow:
 
 ```yaml
 ---
@@ -353,7 +374,9 @@ jobs:
               --access-token=${{ secrets.GIT_HUB_ACCESS_TOKEN }}
 ```
 
-Example of making a release based on a project version:
+### Release
+
+Example of workflow:
 
 ```yaml
 ---

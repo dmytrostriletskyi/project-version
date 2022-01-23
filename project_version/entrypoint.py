@@ -3,7 +3,10 @@ Provide implementation of command-line interface's entrypoint.
 """
 import click
 
-from project_version.commands import check
+from project_version.commands import (
+    bump,
+    check,
+)
 
 
 @click.group()
@@ -16,6 +19,7 @@ def cli() -> None:
     pass
 
 
+cli.add_command(bump)
 cli.add_command(check)
 
 if __name__ == '__main__':

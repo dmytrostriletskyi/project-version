@@ -19,7 +19,10 @@ from project_version.help import (
     PROVIDER_NAME_HELP,
     REPOSITORY_NAME_HELP,
 )
-from project_version.services import GitHubCheckProjectVersion
+from project_version.services import (
+    GitHubBumpProjectVersion,
+    GitHubCheckProjectVersion,
+)
 
 
 @click.option('--provider', required=True, type=click.Choice(SUPPORTED_PROVIDERS), help=PROVIDER_NAME_HELP)
@@ -44,6 +47,42 @@ def check(provider, organization, repository, base_branch, head_branch, access_t
     """
     if provider == GIT_HUB_PROVIDER:
         is_succeed, reason = GitHubCheckProjectVersion(
+            organization=organization,
+            repository=repository,
+            base_branch=base_branch,
+            head_branch=head_branch,
+            access_token=access_token,
+        ).call()
+
+    if not is_succeed:
+        click.echo(reason)
+        sys.exit(FAILED_EXIT_CODE)
+
+    sys.exit(SUCCESSFUL_EXIT_CODE)
+
+
+@click.option('--provider', required=True, type=click.Choice(SUPPORTED_PROVIDERS), help=PROVIDER_NAME_HELP)
+@click.option('--organization', required=True, type=str, help=ORGANIZATION_NAME_HELP)
+@click.option('--repository', required=True, type=str, help=REPOSITORY_NAME_HELP)
+@click.option('--base-branch', required=True, type=str, help=BASE_BRANCH)
+@click.option('--head-branch', required=True, type=str, help=HEAD_BRANCH)
+@click.option('--access-token', required=True, type=str, help=ACCESS_TOKEN)
+@click.command('bump')
+def bump(provider, organization, repository, base_branch, head_branch, access_token) -> None:
+    r"""
+    Bump the minor version of a project version.
+    \f (https://click.palletsprojects.com/en/8.0.x/documentation/#truncating-help-texts)
+
+    Arguments:
+        provider (str): A provider of hosting for software development and version control name.
+        organization (str): the provider's organization name.
+        repository (str): the provider's repository name.
+        base_branch (str): a branch to get a project version from. Usually, a default branch.
+        head_branch (str): a branch to push bumped project version to. Usually, a feature branch.
+        access_token (str): a provider's API access token.
+    """
+    if provider == GIT_HUB_PROVIDER:
+        is_succeed, reason = GitHubBumpProjectVersion(
             organization=organization,
             repository=repository,
             base_branch=base_branch,
