@@ -288,6 +288,10 @@ $ project-version check \
     --access-token=ghp_0TI5LBBLNyKlT5Lv8eR6EIOB0hkopMqz5LWjNyKlZ1
 ```
 
+Use case:
+
+<img src="/assets/check-command-use-case.png" width="600" height="202">
+
 Example of workflow:
 
 ```yaml
