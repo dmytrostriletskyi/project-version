@@ -288,7 +288,20 @@ $ project-version check \
     --access-token=ghp_0TI5LBBLNyKlT5Lv8eR6EIOB0hkopMqz5LWjNyKlZ1
 ```
 
-Example of workflow:
+A use case:
+
+The use case of the command is to prevent merging feature branches to `develop` or `master` that have not increased
+a project version. As illustrated below: if both `master ` and feature branch have project version `1.1.3`, the command
+exits with failed status code, if feature branch has `1.2.0` and `master` has `1.1.3` (lower version), the command exits 
+with succeed status code.
+
+<img src="/assets/check-command-use-case.png" width="600" height="202">
+
+The example of a failed pipeline:
+
+<img src="/assets/check-command-pipeline-example.png">
+
+The example of a pipeline configuration:
 
 ```yaml
 ---
@@ -332,7 +345,7 @@ Parameters:
 | head-branch  | String | Yes      | -                 | A branch to push bumped project version to. Usually, a feature branch.                                                                      |
 | access-token | String | Yes      | -                 | The provider's [API access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token). |
 
-Example of usage:
+The example of usage:
 
 ```bash
 $ project-version bump \
@@ -344,7 +357,22 @@ $ project-version bump \
     --access-token=ghp_0TI5LBBLNyKlT5Lv8eR6EIOB0hkopMqz5LWjNyKlZ1
 ```
 
-Example of workflow:
+A use case:
+
+There are tools like [Dependabot](https://github.com/dependabot) that automatically do updates to your codebase.
+`Dependabot` tracks your requirements' versions and keep them up-to-date through proposing pull requests. The example
+of changes is illustrated below:
+
+<img src="/assets/bump-command-auto-changes.png">
+
+Usually, codebase is covered with tests and there is no need to review such small changes and developers setup these 
+pull requests to be merged automatically. But it will be impossible with `project version` as it requires a project
+version to be increased manually. The bump command can be applied here, you just configure that if a pull request
+is opened by `Dependabot` and then execute the bumping command.
+
+<img src="/assets/bump-command-auto-commit.png">
+
+The example of a pipeline configuration:
 
 ```yaml
 ---
@@ -389,7 +417,7 @@ Parameters:
 | project-version | String | Yes      | -                 | A project version to make a release with.                                                                                                           |
 | access-token    | String | Yes      | -                 | The provider's [API access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token). |
 
-Example of usage:
+The example of usage:
 
 ```bash
 $ project-version release \
@@ -401,7 +429,24 @@ $ project-version release \
     --access-token=ghp_0TI5LBBLNyKlT5Lv8eR6EIOB0hkopMqz5LWjNyKlZ1
 ```
 
-Example of workflow:
+A use case:
+
+When you [squash merge](https://docs.github.com/en/desktop/contributing-and-collaborating-using-github-desktop/managing-commits/squashing-commits)
+your feature branches, your `develop` or `master` commits history might looks like:
+
+```
+Allow taxi drivers to schedule a break (#567)
+Integrate Spotify (#566)
+Create OpenAPI spification (#565)
+```
+
+If you pick one and create a release with a commit as the title, you will have `Allow taxi drivers to schedule a break (#567)`.
+If you add a release version, it will go uglier like `Release v3.6.1: Allow taxi drivers to schedule a break (#567)`.
+The release command remove all the mess and create the following title `v3.6.1: allow taxi drivers to schedule a break`.
+
+<img src="/assets/release-command-example.png">
+
+The example of a pipeline configuration:
 
 ```yaml
 ---
