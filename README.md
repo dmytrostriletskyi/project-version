@@ -1,4 +1,4 @@
-Explicit, strict and automatic project version management based on semantic versioning.
+**Explicit, strict and automatic project version management based on semantic versioning.**
 
 [![](https://github.com/dmytrostriletskyi/project-version/actions/workflows/trunk.yml/badge.svg?branch=master)](https://github.com/dmytrostriletskyi/project-version/actions/workflows/trunk.yml)
 [![](https://img.shields.io/github/release/dmytrostriletskyi/project-version.svg)](https://github.com/dmytrostriletskyi/project-version/releases)
