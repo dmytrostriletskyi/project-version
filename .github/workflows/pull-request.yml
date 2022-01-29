@@ -18,6 +18,8 @@ jobs:
       - uses: actions/checkout@v2
         with:
           ref: ${{ github.event.pull_request.head.sha }}
+      - name: Install project requirements
+        run: make install-requirements
       - name: Bump project version if it is from Dependabot
         if: ${{ github.actor == 'dependabot[bot]' }}
         env:
