@@ -30,14 +30,15 @@ jobs:
       - name: Install project requirements
         run: make install-requirements
       - name: Check project version
+        env:
+          ACCESS_TOKEN: ${{secrets.GIT_HUB_ACCESS_TOKEN}}
         run: |
           project-version check \
             --provider=GitHub \
             --organization=dmytrostriletskyi \
             --repository=project-version \
             --base-branch=master \
-            --head-branch=${{ github.head_ref }} \
-            --access-token=${{ secrets.GIT_HUB_ACCESS_TOKEN }}
+            --head-branch=${{ github.head_ref }}
   lint:
     name: Lint for python-${{ matrix.python-version }} on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
