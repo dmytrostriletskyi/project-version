@@ -60,6 +60,7 @@ def check(provider, organization, repository, base_branch, head_branch) -> None:
             repository=repository,
             base_branch=base_branch,
             head_branch=head_branch,
+            access_token=access_token,
         ).call()
 
     if not is_succeed:
@@ -101,6 +102,7 @@ def bump(provider, organization, repository, base_branch, head_branch) -> None:
             repository=repository,
             base_branch=base_branch,
             head_branch=head_branch,
+            access_token=access_token,
         ).call()
 
     if not is_succeed:
@@ -142,6 +144,7 @@ def release(provider, organization, repository, branch, project_version) -> None
             repository=repository,
             branch=branch,
             project_version=project_version,
+            access_token=access_token,
         ).call()
 
     if not is_succeed:

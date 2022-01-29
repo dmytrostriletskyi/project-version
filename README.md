@@ -327,14 +327,15 @@ jobs:
       - name: Install project version
         run: pip3 install project-version
       - name: Check a project version
+        env:
+          ACCESS_TOKEN: ${{secrets.GIT_HUB_ACCESS_TOKEN}}
         run: |
           project-version check \
               --provider=GitHub \
               --organization=facebook \
               --repository=react \
               --base-branch=master \
-              --head-branch=map-children-components \ 
-              --access-token=${{ secrets.GIT_HUB_ACCESS_TOKEN }}
+              --head-branch=map-children-components
 ```
 
 ### Bump
@@ -403,14 +404,15 @@ jobs:
         run: pip3 install project-version
       - name: Bump project version if it is non-human pull request
         if: ${{ github.actor == 'dependabot[bot]' || github.actor == 'facebook-bot' }}
+        env:
+          ACCESS_TOKEN: ${{secrets.GIT_HUB_ACCESS_TOKEN}}
         run: |
           project-version bump \
               --provider=GitHub \
               --organization=facebook \
               --repository=react \
               --base-branch=master \
-              --head-branch=map-children-components \ 
-              --access-token=${{ secrets.GIT_HUB_ACCESS_TOKEN }}
+              --head-branch=map-children-components
 ```
 
 ### Release
@@ -486,14 +488,15 @@ jobs:
         id: get_project_version
         run: echo "::set-output name=project_version::$(cat .project-version)"
       - name: Release
+        env:
+          ACCESS_TOKEN: ${{secrets.GIT_HUB_ACCESS_TOKEN}}
         run: |
           project-version release \
               --provider=GitHub \
               --organization=facebook \
               --repository=react \
               --branch=master \
-              --project-version=${{ steps.get_project_version.outputs.project_version }} \
-              --access-token=${{ secrets.GIT_HUB_ACCESS_TOKEN }}
+              --project-version=${{ steps.get_project_version.outputs.project_version }}
 ```
 
 ## FAQ
