@@ -8,7 +8,7 @@ on:
 
 jobs:
   check-project-version:
-    name: Check project version for python-${{ matrix.python-version }} on ${{ matrix.os }}
+    name: Check a project version
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -40,7 +40,7 @@ jobs:
             --base-branch=master \
             --head-branch=${{ github.head_ref }}
   lint:
-    name: Lint for python-${{ matrix.python-version }} on ${{ matrix.os }}
+    name: Lint the codebase (python-${{ matrix.python-version }} on ${{ matrix.os }})
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
