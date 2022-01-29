@@ -34,8 +34,8 @@ Also, if you have any questions after reading the documentation, check [FAQ](#fa
 
 ### End users
 
-An end user of the project is a software engineer or DevOps guy who develop projects that needs explicit, strict and 
-automatic project version management for tags, images, API and/or libraries.
+An end user of the project is a software or DevOps-related engineer who develop, release and deploy projects that need
+explicit, strict and automatic project version management for tags, images, API and/or libraries.
 
 ### Semantic versioning
 
@@ -167,11 +167,14 @@ Now you can reuse a project version from `.project-version` file for multiple re
    ```bash
    $ echo .project-version
    2.0.0
-   $ export PROJECT_PREVIOUS_MAJOR_VERSION=$(($cat .project-version)-1); echo $PROJECT_MAJOR_VERSION
+   $ export PROJECT_PREVIOUS_MAJOR_VERSION=$(($cat .project-version)-1)
+   $ echo $PROJECT_MAJOR_VERSION
    1
-   $ export PROJECT_MAJOR_VERSION=$(cut -d '.' -f 1 <<< "$(cat .project-version)"); echo $PROJECT_PREVIOUS_MAJOR_VERSION
+   $ export PROJECT_MAJOR_VERSION=$(cut -d '.' -f 1 <<< "$(cat .project-version)")
+   $ echo $PROJECT_PREVIOUS_MAJOR_VERSION
    2
-   $ cp -r deployment/v$PROJECT_PREVIOUS_MAJOR_VERSION deployment/v$PROJECT_MAJOR_VERSION
+   $ cp -r \
+         deployment/v$PROJECT_PREVIOUS_MAJOR_VERSION deployment/v$PROJECT_MAJOR_VERSION
    $ find deployment/ -type f -exec sed -i \
          's/namespace: v$PROJECT_PREVIOUS_MAJOR_VERSION/namespace: v$PROJECT_MAJOR_VERSION/g' {} +
    ```
@@ -265,6 +268,12 @@ Commands:
 
 Check whether specified project version is increased properly — `project-version check`.
 
+Environment variables:
+
+| Variable     | Type   | Required | Restrictions      | Description                                                                                                                                         |
+|:-------------|:------:|:--------:|:-----------------:|-----------------------------------------------------------------------------------------------------------------------------------------------------|
+| ACCESS_TOKEN | String | Yes      | -                 | The provider's [API access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token). |
+
 Parameters:
 
 | Argument     | Type   | Required | Restrictions      | Description                                                                                                                                         |
@@ -274,7 +283,6 @@ Parameters:
 | repository   | String | Yes      | -                 | The provider's repository name.                                                                                                                     |
 | base-branch  | String | Yes      | -                 | A branch to compare a project version with. Usually, a default branch.                                                                              |
 | head-branch  | String | Yes      | -                 | A branch to get its project version for comparison. Usually, a feature branch.                                                                      |
-| access-token | String | Yes      | -                 | The provider's [API access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token). |
 
 Example of usage:
 
@@ -284,8 +292,7 @@ $ project-version check \
     --organization=facebook \
     --repository=react \
     --base-branch=master \
-    --head-branch=map-children-components \ 
-    --access-token=ghp_0TI5LBBLNyKlT5Lv8eR6EIOB0hkopMqz5LWjNyKlZ1
+    --head-branch=map-children-components
 ```
 
 A use case:
@@ -334,6 +341,12 @@ jobs:
 
 Bump the minor version of a project version — `project-version bump`.
 
+Environment variables:
+
+| Variable     | Type   | Required | Restrictions      | Description                                                                                                                                         |
+|:-------------|:------:|:--------:|:-----------------:|-----------------------------------------------------------------------------------------------------------------------------------------------------|
+| ACCESS_TOKEN | String | Yes      | -                 | The provider's [API access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token). |
+
 Parameters:
 
 | Argument     | Type   | Required | Restrictions      | Description                                                                                                                                         |
@@ -343,7 +356,6 @@ Parameters:
 | repository   | String | Yes      | -                 | The provider's repository name.                                                                                                                     |
 | base-branch  | String | Yes      | -                 | A branch to get a project version from. Usually, a default branch.                                                                              |
 | head-branch  | String | Yes      | -                 | A branch to push bumped project version to. Usually, a feature branch.                                                                      |
-| access-token | String | Yes      | -                 | The provider's [API access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token). |
 
 The example of usage:
 
@@ -353,8 +365,7 @@ $ project-version bump \
     --organization=facebook \
     --repository=react \
     --base-branch=master \
-    --head-branch=dependabot/npm/core-js-3.6.4 \ 
-    --access-token=ghp_0TI5LBBLNyKlT5Lv8eR6EIOB0hkopMqz5LWjNyKlZ1
+    --head-branch=dependabot/npm/core-js-3.6.4
 ```
 
 A use case:
@@ -406,6 +417,12 @@ jobs:
 
 Make a release — `project-version release`.
 
+Environment variables:
+
+| Variable     | Type   | Required | Restrictions      | Description                                                                                                                                         |
+|:-------------|:------:|:--------:|:-----------------:|-----------------------------------------------------------------------------------------------------------------------------------------------------|
+| ACCESS_TOKEN | String | Yes      | -                 | The provider's [API access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token). |
+
 Parameters:
 
 | Argument        | Type   | Required | Restrictions      | Description                                                                                                                                         |
@@ -425,8 +442,7 @@ $ project-version release \
     --organization=dmytrostriletskyi \
     --repository=project-version \
     --branch=master \
-    --project-version=1.1.3 \
-    --access-token=ghp_0TI5LBBLNyKlT5Lv8eR6EIOB0hkopMqz5LWjNyKlZ1
+    --project-version=1.1.3
 ```
 
 A use case:
