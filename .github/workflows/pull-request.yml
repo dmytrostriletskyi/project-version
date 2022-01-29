@@ -7,6 +7,28 @@ on:
       - master
 
 jobs:
+  bump-project-version:
+    name: Bump project version if it is from Dependabot
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        python-version: ['3.10']
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - name: Bump project version if it is from Dependabot
+        if: ${{ github.actor == 'dependabot[bot]' }}
+        env:
+          ACCESS_TOKEN: ${{ secrets.GIT_HUB_ACCESS_TOKEN }}
+        run: |
+          project-version bump \
+              --provider=GitHub \
+              --organization=dmytrostriletskyi \
+              --repository=project-version \
+              --base-branch=master \
+              --head-branch=${{ github.head_ref }}
   check-project-version:
     name: Check project version for python-${{ matrix.python-version }} on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
@@ -31,7 +53,7 @@ jobs:
         run: make install-requirements
       - name: Check project version
         env:
-          ACCESS_TOKEN: ${{secrets.GIT_HUB_ACCESS_TOKEN}}
+          ACCESS_TOKEN: ${{ secrets.GIT_HUB_ACCESS_TOKEN }}
         run: |
           project-version check \
             --provider=GitHub \
@@ -69,3 +91,21 @@ jobs:
         run: make check-code-quality
       - name: Check YAML standards
         run: make check-yaml-standards
+  merge:
+    name: Merge pull request if it is from Dependabot
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        python-version: ['3.10']
+    needs: [check-project-version, lint]
+    outputs:
+      project_version: ${{ steps.get_project_version.outputs.project_version }}
+    steps:
+      - name: Merge pull request if it is from Dependabot
+        uses: juliangruber/merge-pull-request-action@v1
+        if: ${{ github.actor == 'dependabot[bot]' }}
+        with:
+          github-token: ${{ secrets.GIT_HUB_ACCESS_TOKEN }}
+          number: ${{ github.event.number }}
+          method: squash

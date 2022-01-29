@@ -24,7 +24,7 @@ jobs:
         run: make install-requirements
       - name: Make a release
         env:
-          ACCESS_TOKEN: ${{secrets.GIT_HUB_ACCESS_TOKEN}}
+          ACCESS_TOKEN: ${{ secrets.GIT_HUB_ACCESS_TOKEN }}
         run: |
           project-version release \
               --provider=GitHub \
